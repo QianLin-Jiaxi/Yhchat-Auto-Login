@@ -5,7 +5,7 @@
 > **get参数key：若有内置访问密钥则请求时需附带此参数**
 
 #### 返回数据：
-```jsonn
+```jsonc
 {
   "success": true, // 是否成功
   "results": [
