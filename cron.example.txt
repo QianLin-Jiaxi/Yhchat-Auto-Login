@@ -1,0 +1,150 @@
+# Cron 配置示例
+# 用于定时执行云湖自动登录脚本
+# 
+# 编辑 crontab 命令：
+#   crontab -e
+#
+# 查看 crontab 内容：
+#   crontab -l
+#
+# 删除 crontab：
+#   crontab -r
+
+# ==================== 基础格式说明 ====================
+# * * * * * 用户 命令
+# │ │ │ │ │
+# │ │ │ │ └─ 星期 (0-7，0和7都代表周日)
+# │ │ │ └─── 月份 (1-12)
+# │ │ └───── 日期 (1-31)
+# │ └─────── 小时 (0-23)
+# └───────── 分钟 (0-59)
+
+# ==================== 常用时间配置示例 ====================
+
+# 每小时执行一次（每小时的第0分钟）
+0 * * * * cd /path/to/Yhchat-Auto-Login && php QL-Yhchat_Auto_Login.php
+
+# 每30分钟执行一次（每小时第0和30分钟）
+*/30 * * * * cd /path/to/Yhchat-Auto-Login && php QL-Yhchat_Auto_Login.php
+
+# 每2小时执行一次（每偶数小时的第0分钟）
+0 */2 * * * cd /path/to/Yhchat-Auto-Login && php QL-Yhchat_Auto_Login.php
+
+# 每天早上8点执行
+0 8 * * * cd /path/to/Yhchat-Auto-Login && php QL-Yhchat_Auto_Login.php
+
+# 每天早上8点和晚上8点执行
+0 8,20 * * * cd /path/to/Yhchat-Auto-Login && php QL-Yhchat_Auto_Login.php
+
+# 每周一早上8点执行
+0 8 * * 1 cd /path/to/Yhchat-Auto-Login && php QL-Yhchat_Auto_Login.php
+
+# 每月1号早上8点执行
+0 8 1 * * cd /path/to/Yhchat-Auto-Login && php QL-Yhchat_Auto_Login.php
+
+# 工作日（周一到周五）早上9点执行
+0 9 * * 1-5 cd /path/to/Yhchat-Auto-Login && php QL-Yhchat_Auto_Login.php
+
+# ==================== 带访问密钥的示例 ====================
+
+# 每小时执行一次（带访问密钥）
+0 * * * * cd /path/to/Yhchat-Auto-Login && php QL-Yhchat_Auto_Login.php?key=your_secret_key
+
+# 每30分钟执行一次（带访问密钥）
+*/30 * * * * cd /path/to/Yhchat-Auto-Login && php QL-Yhchat_Auto_Login.php?key=your_secret_key
+
+# ==================== 带日志记录的示例 ====================
+
+# 每小时执行一次，输出日志到文件
+0 * * * * cd /path/to/Yhchat-Auto-Login && php QL-Yhchat_Auto_Login.php >> /var/log/yhchat_login.log 2>&1
+
+# 每小时执行一次，日志按日期归档
+0 * * * * cd /path/to/Yhchat-Auto-Login && php QL-Yhchat_Auto_Login.php >> /var/log/yhchat_login_$(date +\%Y\%m\%d).log 2>&1
+
+# ==================== 带错误通知的示例 ====================
+
+# 执行失败时发送邮件通知（需要配置邮件服务）
+0 * * * * cd /path/to/Yhchat-Auto-Login && php QL-Yhchat_Auto_Login.php || echo "Yhchat登录失败" | mail -s "Cron Job Failed" admin@example.com
+
+# ==================== 详细模式示例 ====================
+
+# 每小时执行一次，记录详细的尝试信息
+0 * * * * cd /path/to/Yhchat-Auto-Login && php QL-Yhchat_Auto_Login.php?verbose=true >> /var/log/yhchat_detailed.log 2>&1
+
+# ==================== 使用脚本包装器的示例 ====================
+
+# 创建一个包装脚本 wrapper.sh：
+# #!/bin/bash
+# cd /path/to/Yhchat-Auto-Login
+# php QL-Yhchat_Auto_Login.php
+# if [ $? -ne 0 ]; then
+#     echo "脚本执行失败" | mail -s "Yhchat登录失败" admin@example.com
+# fi
+
+# 然后在 cron 中调用包装脚本
+0 * * * * /path/to/wrapper.sh
+
+# ==================== 使用 curl 访问的示例（如果通过HTTP执行） ====================
+
+# 每小时通过HTTP请求执行
+0 * * * * curl -s "http://yourserver.com/QL-Yhchat_Auto_Login.php?key=your_secret_key" > /dev/null 2>&1
+
+# 每30分钟通过HTTP请求执行并记录日志
+*/30 * * * * curl -s "http://yourserver.com/QL-Yhchat_Auto_Login.php?key=your_secret_key" >> /var/log/yhchat_http.log 2>&1
+
+# ==================== 注意事项 ====================
+#
+# 1. 路径问题：
+#    - Cron 的 PATH 变量可能与用户环境不同
+#    - 建议使用绝对路径
+#    - 例如：/usr/bin/php 或 /usr/local/bin/php
+#
+# 2. 权限问题：
+#    - 确保执行 Cron 的用户对脚本文件有执行权限
+#    - 确保对日志目录有写入权限
+#    - 例如：chmod +x QL-Yhchat_Auto_Login.php
+#
+# 3. 日志文件：
+#    - 确保日志目录存在并有写入权限
+#    - 定期清理或轮转日志文件，避免磁盘空间不足
+#
+# 4. 测试：
+#    - 先手动执行命令，确保能正常工作
+#    - 然后再添加到 crontab
+#    - 测试命令：cd /path/to/Yhchat-Auto-Login && php QL-Yhchat_Auto_Login.php
+#
+# 5. 时区：
+#    - Cron 使用系统时区，确认时区设置正确
+#    - 查看：timedatectl 或 date
+#    - 修改：sudo timedatectl set-timezone Asia/Shanghai
+#
+# 6. 错误调试：
+#    - 查看系统日志：grep CRON /var/log/syslog
+#    - 或查看用户邮件：mail 命令
+#    - Cron 会将命令的输出通过邮件发送给用户
+#
+# 7. 推荐配置：
+#    - 根据实际需求调整执行频率
+#    - 建议不要过于频繁，避免服务器压力过大
+#    - 一般每30分钟到1小时执行一次即可
+
+# ==================== 快速开始 ====================
+#
+# 1. 复制此示例到你的项目目录：
+#    cp cron.example.txt my_cron.conf
+#
+# 2. 编辑 my_cron.conf，修改路径和参数：
+#    nano my_cron.conf
+#
+# 3. 将配置添加到 crontab：
+#    crontab my_cron.conf
+#
+# 4. 验证配置是否生效：
+#    crontab -l
+#
+# 5. 等待下次执行或手动测试验证
+
+# ==================== 完整配置示例 ====================
+# 推荐的生产环境配置示例：
+# 每30分钟执行一次，带密钥验证，记录日志
+*/30 * * * * cd /home/user/Yhchat-Auto-Login && /usr/bin/php QL-Yhchat_Auto_Login.php?key=your_secure_key >> /home/user/Yhchat-Auto-Login/logs/cron_$(date +\%Y\%m\%d).log 2>&1
