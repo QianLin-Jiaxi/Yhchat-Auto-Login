@@ -4,8 +4,10 @@
 #### 切勿使用此功能进行非法活动！后果由使用此者承担
 > **get参数key：若有内置访问密钥则请求时需附带此参数**
 
+#### [https://github.com/QianLin-Jiaxi/Yhchat-Auto-Login/tree/master/original-%E5%8E%9F%E5%A7%8B%E7%89%88%E6%9C%AC](https://github.com/QianLin-Jiaxi/Yhchat-Auto-Login/tree/master/original-%E5%8E%9F%E5%A7%8B%E7%89%88%E6%9C%AC)原始版本跳转
+
 ## 开发写作规则：
-#### 使用github用户名创建自己的文件夹后将提交更改放入个人文件夹中
+#### 需保存原始可用版本
 
 #### 返回数据：
 ```jsonc
